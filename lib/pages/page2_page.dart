@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:state_singleton/services/user_service.dart';
+
+import '../models/User.dart';
 
 class Pagin2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Pagin 2',
-        ),
+        title: userService.existUser
+            ? Text('Name: ${userService.user.name}')
+            : Text('paging 2'),
       ),
       body: Center(
         child: Column(
@@ -19,7 +24,11 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () => userService.user = User(
+                name: "김요환",
+                age: 35,
+                professtion: ['Fullstack Developer', 'IOS AppDeveloper'],
+              ),
             ),
             MaterialButton(
               child: Text(
@@ -27,7 +36,7 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () => userService.changeAge(32),
             ),
             MaterialButton(
               child: Text(
@@ -35,7 +44,7 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: ()=> userService.addPerfesion(),
             ),
           ],
         ),
