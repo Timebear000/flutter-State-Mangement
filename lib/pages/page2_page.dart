@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:state_singleton/services/user_service.dart';
+
+import '../models/User.dart';
 
 class Pagin2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Pagin 2',
+        title: StreamBuilder(
+          stream: userService.userStream,
+          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+            return snapshot.hasData
+                ? Text(snapshot.data.name)
+                : Text('pagin 2');
+          },
         ),
       ),
       body: Center(
@@ -19,7 +27,10 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () {
+                final newuser = new User(name: '김요환', age: 35);
+                userService.loadUser(newuser);
+              },
             ),
             MaterialButton(
               child: Text(
@@ -27,7 +38,9 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () {
+                userService.chageAge(40);
+              },
             ),
             MaterialButton(
               child: Text(
@@ -39,10 +52,6 @@ class Pagin2Page extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.accessibility_new),
-        onPressed: () => Navigator.pushNamed(context, 'pagin1'),
       ),
     );
   }

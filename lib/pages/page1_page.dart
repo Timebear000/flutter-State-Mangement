@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:state_singleton/services/user_service.dart';
+
+import '../models/User.dart';
 
 class Pagin1Page extends StatelessWidget {
   @override
@@ -9,7 +12,16 @@ class Pagin1Page extends StatelessWidget {
           'Pagin 1',
         ),
       ),
-      body: InfomationUser(),
+      body: StreamBuilder(
+        stream: userService.userStream,
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          return snapshot.hasData
+              ? InfomationUser(snapshot.data)
+              : Center(
+                  child: Text('no hey information user'),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.accessibility_new),
         onPressed: () => Navigator.pushNamed(context, 'pagin2'),
@@ -19,6 +31,8 @@ class Pagin1Page extends StatelessWidget {
 }
 
 class InfomationUser extends StatelessWidget {
+  final User user;
+  const InfomationUser(this.user);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,10 +50,10 @@ class InfomationUser extends StatelessWidget {
             ),
             Divider(),
             ListTile(
-              title: Text('Name'),
+              title: Text('Name: ${user.name}'),
             ),
             ListTile(
-              title: Text('Age'),
+              title: Text('Age: ${user.age}'),
             ),
             Text(
               'Professions',
