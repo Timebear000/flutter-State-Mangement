@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:state_singleton/bloc/user/user_cubit.dart';
+
+import '../models/User.dart';
 
 class Pagin1Page extends StatelessWidget {
   @override
@@ -8,8 +12,17 @@ class Pagin1Page extends StatelessWidget {
         title: Text(
           'Pagin 1',
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              final userCubit = context.read<UserCubit>();
+              userCubit.removeUser();
+            },
+          ),
+        ],
       ),
-      body: InfomationUser(),
+      body: BodyScaffold(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.accessibility_new),
         onPressed: () => Navigator.pushNamed(context, 'pagin2'),
@@ -18,7 +31,32 @@ class Pagin1Page extends StatelessWidget {
   }
 }
 
+class BodyScaffold extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (_, state) {
+        switch (state.runtimeType) {
+          case UserInitial:
+            return Center(
+              child: Text('No hay Information Del User'),
+            );
+            break;
+
+          case UserActive:
+            return InfomationUser((state as UserActive).user);
+            break;
+          default:
+            return Center(child: Text('No hay Information Del User'));
+        }
+      },
+    );
+  }
+}
+
 class InfomationUser extends StatelessWidget {
+  final User user;
+  const InfomationUser(this.user);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,10 +74,10 @@ class InfomationUser extends StatelessWidget {
             ),
             Divider(),
             ListTile(
-              title: Text('Name'),
+              title: Text('Name : ${user.name}'),
             ),
             ListTile(
-              title: Text('Age'),
+              title: Text('Age : ${user.age}'),
             ),
             Text(
               'Professions',
@@ -49,15 +87,11 @@ class InfomationUser extends StatelessWidget {
               ),
             ),
             Divider(),
-            ListTile(
-              title: Text('Profesion 1'),
-            ),
-            ListTile(
-              title: Text('Profesion 1'),
-            ),
-            ListTile(
-              title: Text('Profesion 1'),
-            ),
+            ...user.professtion
+                .map((e) => ListTile(
+                      title: Text(e),
+                    ))
+                .toList(),
           ],
         ));
   }

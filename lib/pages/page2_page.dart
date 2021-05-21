@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:state_singleton/bloc/user/user_cubit.dart';
+
+import '../models/User.dart';
 
 class Pagin2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.read<UserCubit>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -19,7 +24,17 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () {
+                final newUser = User(
+                  name: '김요환',
+                  age: 34,
+                  professtion: [
+                    'FullStack Developer',
+                    'VideoJugador Veteran',
+                  ],
+                );
+                userCubit.selectionUser(newUser);
+              },
             ),
             MaterialButton(
               child: Text(
@@ -27,7 +42,9 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () {
+                userCubit.chageAge(35);
+              },
             ),
             MaterialButton(
               child: Text(
@@ -35,7 +52,9 @@ class Pagin2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {},
+              onPressed: () {
+                userCubit.addProfession();
+              },
             ),
           ],
         ),
